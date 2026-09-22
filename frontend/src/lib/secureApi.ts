@@ -1450,10 +1450,26 @@ export class SecureAPIClient {
 
   // ============= DASHBOARD API =============
   /**
+   * List properties belonging to the current user's tenant
+   */
+  //-----------------------------------------------------
+  //  add a getProperties call and pass month/year through getDashboardSummary
+  //----------------------------------------------------
+  async getDashboardProperties() {
+    return this.request<any>('/api/v1/dashboard/properties');
+  }
+
+  /**
    * Get dashboard summary with optional simulation header
    */
-  async getDashboardSummary(propertyId: string, options?: { simulatedTenant?: string, timestamp?: number }) {
+  async getDashboardSummary(propertyId: string, options?: { month?: number, year?: number, simulatedTenant?: string, timestamp?: number }) {
     const queryParams = new URLSearchParams({ property_id: propertyId });
+    if (options?.month) {
+      queryParams.append('month', options.month.toString());
+    }
+    if (options?.year) {
+      queryParams.append('year', options.year.toString());
+    }
     if (options?.timestamp) {
       queryParams.append('_t', options.timestamp.toString());
     }
